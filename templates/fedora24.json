@@ -1,0 +1,393 @@
+{
+    "variables": {
+        "atlas_token": null,
+        "atlas_name": "Fedora 24",
+        "atlas_short_description": "Fedora 24",
+        "atlas_username": null,
+        "atlas_version": "{{isotime \"2006\"}}.{{isotime \"01\"}}.{{isotime \"02\"}}",
+        "headless": "true",
+        "iso_sha256sum_32": "f85f36d30a53988aacd7043461bc74a8f74ff35bcf6faedab8d3f7d12cab0227",
+        "iso_sha256sum_64": "071c30520775b3e93bb4c34edab4eab3badc26fbb8473ad3a9458614ba85a4e5",
+        "iso_url_32": "https://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/fedora/linux/releases/24/Server/i386/iso/Fedora-Server-netinst-i386-24-1.2.iso",
+        "iso_url_64": "https://www.mirrorservice.org/sites/dl.fedoraproject.org/pub/fedora/linux/releases/24/Server/x86_64/iso/Fedora-Server-netinst-x86_64-24-1.2.iso",
+        "parallels_tools_version": null, 
+        "virtualbox_additions_version": null,
+        "vmware_tools_version": null
+    },
+    "builders": [
+        {
+            "type": "parallels-iso",
+            "name": "fedora24-32-parallels",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-32 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_os_type": "rhel7",
+            "hard_drive_interface": "sata",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "parallels_tools_flavor": "lin",
+            "parallels_tools_guest_path": "/dev/shm/prl-tools-{{.Flavor}}.iso",
+            "prlctl": [
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "ide" ],
+                [ "set", "{{.Name}}", "--device-add", "hdd", "--type", "expand", "--size", "1024", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-del", "sound0" ],
+                [ "set", "{{.Name}}", "--device-del", "usb" ],
+                [ "set", "{{.Name}}", "--videosize", "2" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "fedora24-32"
+        },
+        {
+            "type": "parallels-iso",
+            "name": "fedora24-64-parallels",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-64 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_os_type": "rhel7",
+            "hard_drive_interface": "sata",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "parallels_tools_flavor": "lin",
+            "parallels_tools_guest_path": "/dev/shm/prl-tools-{{.Flavor}}.iso",
+            "prlctl": [
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "ide" ],
+                [ "set", "{{.Name}}", "--device-add", "hdd", "--type", "expand", "--size", "1024", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-del", "sound0" ],
+                [ "set", "{{.Name}}", "--device-del", "usb" ],
+                [ "set", "{{.Name}}", "--videosize", "2" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "fedora24-64"
+        },
+        {
+            "type": "qemu",
+            "name": "fedora24-32-libvirt",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "accelerator": "kvm",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-32 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/libvirt.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "machine_type": "q35",
+            "qemuargs": [
+                [ "-m", "512" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "fedora24-32"
+        },
+        {
+            "type": "qemu",
+            "name": "fedora24-64-libvirt",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "20m",
+            "accelerator": "kvm",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-64 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/libvirt.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "machine_type": "q35",
+            "qemuargs": [
+                [ "-m", "512" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "fedora24-64"
+        },
+        {
+            "type": "virtualbox-iso",
+            "name": "fedora24-32-virtualbox",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-32 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_additions_path": "/dev/shm/VBoxGuestAdditions.iso",
+            "guest_os_type": "Fedora",
+            "hard_drive_interface": "sata",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "shutdown_command": "halt -p",
+            "vboxmanage": [
+                [ "modifyvm", "{{.Name}}", "--vram", "5", "--rtcuseutc", "on", "--chipset", "ich9", "--nictype1", "virtio", "--audio", "none", "--usb", "off", "--usbehci", "off" ],
+                [ "createhd", "--format", "VDI", "--filename", "output-{{build_name}}/{{.Name}}-1.vdi", "--size", "1024" ],
+                [ "storageattach", "{{.Name}}", "--storagectl", "SATA Controller", "--port", "1", "--device", "0", "--type", "hdd", "--medium", "output-{{build_name}}/{{.Name}}-1.vdi" ]
+            ],
+            "vboxmanage_post": [
+                [ "storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}.vdi", "--compact" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}-1.vdi", "--compact" ]
+            ],
+            "vm_name": "fedora24-32"
+        },
+        {
+            "type": "virtualbox-iso",
+            "name": "fedora24-64-virtualbox",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-64 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_additions_path": "/dev/shm/VBoxGuestAdditions.iso",
+            "guest_os_type": "Fedora_64",
+            "hard_drive_interface": "sata",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "shutdown_command": "halt -p",
+            "vboxmanage": [
+                [ "modifyvm", "{{.Name}}", "--vram", "5", "--rtcuseutc", "on", "--chipset", "ich9", "--nictype1", "virtio", "--audio", "none", "--usb", "off", "--usbehci", "off" ],
+                [ "createhd", "--format", "VDI", "--filename", "output-{{build_name}}/{{.Name}}-1.vdi", "--size", "1024" ],
+                [ "storageattach", "{{.Name}}", "--storagectl", "SATA Controller", "--port", "1", "--device", "0", "--type", "hdd", "--medium", "output-{{build_name}}/{{.Name}}-1.vdi" ]
+            ],
+            "vboxmanage_post": [
+                [ "storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}.vdi", "--compact" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}-1.vdi", "--compact" ]
+            ],
+            "vm_name": "fedora24-64"
+        },
+        {
+            "type": "vmware-iso",
+            "name": "fedora24-32-vmware",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-32 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_additional_size": [ 1024 ],
+            "disk_size": 49152,
+            "guest_os_type": "rhel7",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "shutdown_command": "halt -p",
+            "tools_upload_flavor": "linux",
+            "tools_upload_path": "/dev/shm/{{.Flavor}}.iso",
+            "vm_name": "fedora24-32",
+            "vmx_data": {
+                "memsize": "512",
+                "scsi0.virtualdev": "pvscsi"
+            },
+            "vmx_data_post": {
+                "ethernet0.virtualdev": "vmxnet3",
+                "ide1:0.present": "FALSE"
+            },
+            "vmdk_name": "fedora24-32"
+        },
+        {
+            "type": "vmware-iso",
+            "name": "fedora24-64-vmware",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "boot_command": [
+                "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "hostname=fedora24-64 ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter><wait>"
+            ],
+            "boot_wait": "5s",
+            "disk_additional_size": [ 1024 ],
+            "disk_size": 49152,
+            "guest_os_type": "rhel7-64",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/fedora24",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "shutdown_command": "halt -p",
+            "tools_upload_flavor": "linux",
+            "tools_upload_path": "/dev/shm/{{.Flavor}}.iso",
+            "vm_name": "fedora24-64",
+            "vmx_data": {
+                "memsize": "512",
+                "scsi0.virtualdev": "pvscsi"
+            },
+            "vmx_data_post": {
+                "ethernet0.virtualdev": "vmxnet3",
+                "ide1:0.present": "FALSE"
+            },
+            "vmdk_name": "fedora24-64"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/fedora24.sh"
+            ],
+            "remote_path": "/dev/shm/script.sh"
+        }
+    ],
+    "post-processors": [
+        [
+            {
+                "type": "vagrant",
+                "compression_level": 9,
+                "output": "{{.BuildName}}.box",
+                "override": {
+                    "virtualbox": {
+                        "vagrantfile_template": "vagrant/virtualbox"
+                    },
+                    "vmware": {
+                        "vagrantfile_template": "vagrant/vmware"
+                    }
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-32-parallels" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "parallels",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-64-parallels" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (x86_64)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "parallels",
+                    "short_description": "{{user `atlas_short_description`}} (x86_64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-32-libvirt" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "libvirt",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-64-libvirt" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (x86_64)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "libvirt",
+                    "short_description": "{{user `atlas_short_description`}} (x86_64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-32-virtualbox" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "virtualbox",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-64-virtualbox" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (x86_64)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "virtualbox",
+                    "short_description": "{{user `atlas_short_description`}} (x86_64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-32-vmware" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "vmware_desktop",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "fedora24-64-vmware" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/fedora24-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (x86_64)\n\nCore installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- VMware Tools {{user `vmware_tools_version`}}\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "vmware_desktop",
+                    "short_description": "{{user `atlas_short_description`}} (x86_64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            }
+        ]
+    ]
+}

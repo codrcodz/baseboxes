@@ -1,0 +1,5 @@
+/output-*/
+/linuxbuild/.vagrant
+/packer_cache/
+/*.box
+vars.json

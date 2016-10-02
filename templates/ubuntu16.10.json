@@ -1,0 +1,409 @@
+{
+    "variables": {
+        "atlas_token": null,
+        "atlas_name": "Ubuntu 16.10 (Yakkety Yak)",
+        "atlas_short_description": "Ubuntu 16.10 (Yakkety Yak)",
+        "atlas_username": null,
+        "atlas_version": "{{isotime \"2006\"}}.{{isotime \"01\"}}.{{isotime \"02\"}}",
+        "headless": "true",
+        "iso_sha256sum_32": "0e52cc7c7c4cc9e91f4e984c1232192394c6caf8e7170c1aeefb37bdef1f0625",
+        "iso_sha256sum_64": "72b0d421da77f1e0c549b4efe6fc6c184e9909d6792f0d1e59b56d63e9705659",
+        "iso_url_32": "http://releases.ubuntu.com/16.10/ubuntu-16.10-server-i386.iso",
+        "iso_url_64": "http://releases.ubuntu.com/16.10/ubuntu-16.10-server-amd64.iso",
+        "parallels_tools_version": null,
+        "virtualbox_additions_version": null
+    },
+    "builders": [
+        {
+            "type": "parallels-iso",
+            "name": "ubuntu16.10-32-parallels",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-32 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_os_type": "ubuntu",
+            "hard_drive_interface": "sata",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "parallels_tools_flavor": "lin",
+            "parallels_tools_guest_path": "/dev/shm/prl-tools-{{.Flavor}}.iso",
+            "prlctl": [
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "ide" ],
+                [ "set", "{{.Name}}", "--device-add", "hdd", "--type", "expand", "--size", "1024", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-del", "sound0" ],
+                [ "set", "{{.Name}}", "--device-del", "usb" ],
+                [ "set", "{{.Name}}", "--videosize", "2" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "ubuntu1610-32"
+        },
+        {
+            "type": "parallels-iso",
+            "name": "ubuntu16.10-64-parallels",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-64 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_os_type": "ubuntu",
+            "hard_drive_interface": "sata",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "parallels_tools_flavor": "lin",
+            "parallels_tools_guest_path": "/dev/shm/prl-tools-{{.Flavor}}.iso",
+            "prlctl": [
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "ide" ],
+                [ "set", "{{.Name}}", "--device-add", "hdd", "--type", "expand", "--size", "1024", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "sata" ],
+                [ "set", "{{.Name}}", "--device-del", "sound0" ],
+                [ "set", "{{.Name}}", "--device-del", "usb" ],
+                [ "set", "{{.Name}}", "--videosize", "2" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "ubuntu1610-64"
+        },
+        {
+            "type": "qemu",
+            "name": "ubuntu16.10-32-libvirt",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "accelerator": "kvm",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz biosdevname=0 net.ifnames=0 initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-32 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/libvirt.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "machine_type": "q35",
+            "qemuargs": [
+                [ "-m", "512" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "ubuntu16.10-32"
+        },
+        {
+            "type": "qemu",
+            "name": "ubuntu16.10-64-libvirt",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "accelerator": "kvm",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz biosdevname=0 net.ifnames=0 initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-64 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/libvirt.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "machine_type": "q35",
+            "qemuargs": [
+                [ "-m", "512" ]
+            ],
+            "shutdown_command": "halt -p",
+            "vm_name": "ubuntu16.10-64"
+        },
+        {
+            "type": "virtualbox-iso",
+            "name": "ubuntu16.10-32-virtualbox",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-32 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_additions_path": "/dev/shm/VBoxGuestAdditions.iso",
+            "guest_os_type": "Ubuntu",
+            "hard_drive_interface": "sata",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "shutdown_command": "halt -p",
+            "vboxmanage": [
+                [ "modifyvm", "{{.Name}}", "--vram", "5", "--rtcuseutc", "on", "--chipset", "ich9", "--nictype1", "virtio", "--audio", "none", "--usb", "off", "--usbehci", "off" ],
+                [ "createhd", "--format", "VDI", "--filename", "output-{{build_name}}/{{.Name}}-1.vdi", "--size", "1024" ],
+                [ "storageattach", "{{.Name}}", "--storagectl", "SATA Controller", "--port", "1", "--device", "0", "--type", "hdd", "--medium", "output-{{build_name}}/{{.Name}}-1.vdi" ]
+            ],
+            "vboxmanage_post": [
+                [ "storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}.vdi", "--compact" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}-1.vdi", "--compact" ]
+            ],
+            "vm_name": "ubuntu16.10-32"
+        },
+        {
+            "type": "virtualbox-iso",
+            "name": "ubuntu16.10-64-virtualbox",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-64 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_size": 49152,
+            "guest_additions_path": "/dev/shm/VBoxGuestAdditions.iso",
+            "guest_os_type": "Ubuntu_64",
+            "hard_drive_interface": "sata",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "shutdown_command": "halt -p",
+            "vboxmanage": [
+                [ "modifyvm", "{{.Name}}", "--vram", "5", "--rtcuseutc", "on", "--chipset", "ich9", "--nictype1", "virtio", "--audio", "none", "--usb", "off", "--usbehci", "off" ],
+                [ "createhd", "--format", "VDI", "--filename", "output-{{build_name}}/{{.Name}}-1.vdi", "--size", "1024" ],
+                [ "storageattach", "{{.Name}}", "--storagectl", "SATA Controller", "--port", "1", "--device", "0", "--type", "hdd", "--medium", "output-{{build_name}}/{{.Name}}-1.vdi" ]
+            ],
+            "vboxmanage_post": [
+                [ "storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}.vdi", "--compact" ],
+                [ "modifyhd", "output-{{build_name}}/{{.Name}}-1.vdi", "--compact" ]
+            ],
+            "vm_name": "ubuntu16.10-64"
+        },
+        {
+            "type": "vmware-iso",
+            "name": "ubuntu16.10-32-vmware",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-32 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_additional_size": [ 1024 ],
+            "disk_size": 49152,
+            "guest_os_type": "ubuntu",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_32`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_32`}}",
+            "shutdown_command": "halt -p",
+            "tools_upload_flavor": "linux",
+            "tools_upload_path": "/dev/shm/{{.Flavor}}.iso",
+            "vm_name": "ubuntu16.10-32",
+            "vmx_data": {
+                "ethernet0.virtualdev": "vmxnet3",
+                "memsize": "512",
+                "scsi0.virtualdev": "pvscsi"
+            },
+            "vmx_data_post": {
+                "ide1:0.present": "FALSE"
+            },
+            "vmdk_name": "ubuntu16.10-32"
+        },
+        {
+            "type": "vmware-iso",
+            "name": "ubuntu16.10-64-vmware",
+            "ssh_username": "root",
+            "ssh_password": "packer",
+            "boot_command": [
+                "<enter><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs>/install/vmlinuz initrd=/install/initrd.gz auto-install/enable=true",
+                " netcfg/get_hostname=ubuntu1610-64 preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter>"
+            ],
+            "boot_wait": "5s",
+            "disk_additional_size": [ 1024 ],
+            "disk_size": 49152,
+            "guest_os_type": "ubuntu-64",
+            "headless": "{{user `headless`}}",
+            "http_directory": "http/ubuntu16.10",
+            "iso_checksum": "{{user `iso_sha256sum_64`}}",
+            "iso_checksum_type": "sha256",
+            "iso_url": "{{user `iso_url_64`}}",
+            "shutdown_command": "halt -p",
+            "tools_upload_flavor": "linux",
+            "tools_upload_path": "/dev/shm/{{.Flavor}}.iso",
+            "vm_name": "ubuntu16.10-64",
+            "vmx_data": {
+                "ethernet0.virtualdev": "vmxnet3",
+                "memsize": "512",
+                "scsi0.virtualdev": "pvscsi"
+            },
+            "vmx_data_post": {
+                "ide1:0.present": "FALSE"
+            },
+            "vmdk_name": "ubuntu16.10-64"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/ubuntu16.10.sh"
+            ],
+            "remote_folder": "/dev/shm"
+        }
+    ],
+
+    "post-processors": [
+        [
+            {
+                "type": "vagrant",
+                "compression_level": 9,
+                "output": "{{.BuildName}}.box",
+                "override": {
+                    "virtualbox": {
+                        "vagrantfile_template": "vagrant/virtualbox"
+                    },
+                    "vmware": {
+                        "vagrantfile_template": "vagrant/vmware"
+                    }
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-32-parallels" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "parallels",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-64-parallels" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (amd64)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "parallels",
+                    "short_description": "{{user `atlas_short_description`}} (amd64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-32-libvirt" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "libvirt",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-64-libvirt" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (amd64)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "libvirt",
+                    "short_description": "{{user `atlas_short_description`}} (amd64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-32-virtualbox" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "virtualbox",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-64-virtualbox" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (amd64)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "virtualbox",
+                    "short_description": "{{user `atlas_short_description`}} (amd64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-32-vmware" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-32",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (i386)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "vmware_desktop",
+                    "short_description": "{{user `atlas_short_description`}} (i386)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            },
+            {
+                "type": "atlas",
+                "only": [ "ubuntu16.10-64-vmware" ],
+                "token": "{{user `atlas_token`}}",
+                "artifact": "{{user `atlas_username`}}/ubuntu16.10-64",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "description": "{{user `atlas_name`}} (amd64)\n\nMinimal installation with guest extensions:\n- Parallels Tools {{user `parallels_tools_version`}}\n- VirtualBox Guest Additions {{user `virtualbox_additions_version`}}\n- open-vm-tools 10.0.7\n\nPackages are current as of {{isotime \"2006-01-02\"}}.\n\nhttps://github.com/wholebits/baseboxes",
+                    "provider": "vmware_desktop",
+                    "short_description": "{{user `atlas_short_description`}} (amd64)",
+                    "version": "{{user `atlas_version`}}"
+                }
+            }
+        ]
+    ]
+}
