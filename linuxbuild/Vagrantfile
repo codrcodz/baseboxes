@@ -12,9 +12,9 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, inline: <<-EOF
     apt-get update
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y jq libvirt-clients libvirt-daemon make qemu-kvm qemu-utils unzip
-    wget -nv https://releases.hashicorp.com/packer/0.11.0/packer_0.11.0_linux_amd64.zip
+    wget -nv https://releases.hashicorp.com/packer/0.12.0/packer_0.12.0_linux_amd64.zip
     mkdir bin
-    unzip -d bin packer_0.11.0_linux_amd64.zip
+    unzip -d bin packer_0.12.0_linux_amd64.zip
     adduser vagrant kvm
     EOF
 

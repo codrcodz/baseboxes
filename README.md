@@ -54,9 +54,9 @@ The following Vagrant providers are supported:
 
 * [Packer](http://packer.io/)
 
-* [Vagrant](http://vagrantup.com/): `libvirt` builds must be performed on a Linux system due to Packer limitations. If the build
-  environment is not Linux (e.g. macOS), Vagrant will be used to start an Ubuntu Linux VM. The `parallels` or `vmware_desktop`
-  provider is required for this as VirtualBox does not support nested virtualization for 64-bit guests.
+* [Vagrant](http://vagrantup.com/): If the build environment is not Linux (e.g. macOS), `libvirt` builds will be done in an Ubuntu
+  Linux VM controlled by Vagrant. The `parallels` or `vmware_desktop` provider is required for this as VirtualBox does not support
+  nested virtualization for 64-bit guests.
 
 * [jq](https://stedolan.github.io/jq/)
 
